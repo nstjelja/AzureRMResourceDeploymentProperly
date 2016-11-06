@@ -1,0 +1,102 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "ServerName": {
+      "type": "string",
+      "minLength": 1,
+      "defaultValue": "svibor"
+    },
+    "AdminUserName":{
+        "type": "string",
+        "minLength": 6,
+        "defaultValue": "GodModeAdmin"
+    },
+    "AdminPassword":{
+        "type": "string",
+        "minLength": 6,
+        "defaultValue": "De8w,6rR!mLep5y{"
+    },
+    "DatabaseName" : {
+        "type": "string",
+        "defaultValue": "Customers"
+    }
+  },
+  "variables": {
+     
+  },
+  "resources": [
+    {
+      "name": "[parameters('ServerName')]",
+      "type": "Microsoft.Sql/servers",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2014-04-01-preview",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "[parameters('ServerName')]"
+      },
+      "properties": {
+        "version": "12.0",
+        "administratorLogin": "[parameters('AdminUserName')]",
+        "administratorLoginPassword": "[parameters('AdminPassword')]"
+      },
+      "resources": [
+        {
+          "name": "AllowAllWindowsAzureIps",
+          "type": "firewallRules",
+          "apiVersion": "2014-04-01-preview",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[concat('Microsoft.Sql/servers/', parameters('ServerName'))]"
+          ],
+          "properties": {
+            "startIpAddress": "0.0.0.0",
+            "endIpAddress": "0.0.0.0"
+          }
+        },
+       
+        {
+          "name": "[parameters('DatabaseName')]",
+          "type": "databases",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[concat('Microsoft.Sql/servers/', parameters('ServerName'))]"
+          ],
+          "tags": {
+            "displayName": "[parameters('DatabaseName')]"
+          },
+          "properties": {
+            "collation":  "SQL_Latin1_General_CP1_CI_AS",
+            "edition": "Basic",
+            "maxSizeBytes": "2147483648",
+            "requestedServiceObjectiveName": "Basic"
+          }
+        }
+      ]
+    }
+  ],
+    "outputs": {
+        "sqlServerFQDN" : {
+            "type": "string",
+            "value": "[reference(concat('Microsoft.Sql/servers/', parameters('ServerName'))).fullyQualifiedDomainName]"
+        },
+        "SqlServerName" : {
+            "type": "string",
+            "value": "[parameters('ServerName')]"
+        },
+        "SqlServerAdminLogin":{
+            "type": "string",
+            "value": "[parameters('AdminUserName')]"
+        },
+        "SqlServerPassword":{
+            "type": "string",
+            "value": "[parameters('AdminPassword')]"
+        },
+        "DatabaseName" : {
+            "type": "string",
+            "value": "[parameters('DatabaseName')]"
+        }
+
+    }
+}
