@@ -24,14 +24,13 @@ if ($sqlServerResult.ProvisioningState -eq "Failed"){
 #Create the resource group for the App Service/Plan
 createResourceGroupIsNotExists "perun" "West Europe"
 
-$parameters = @{"SqlServerFQDN" = $sqlServerResult.Outputs.Item("sqlServerFQDN").Value;
-                "SqlServerName" = $sqlServerResult.Outputs.Item("SqlServerName").Value; 
-                "SqlServerAdminLogin" = $sqlServerResult.Outputs.Item("SqlServerAdminLogin").Value;
-                "SqlServerPassword" = $sqlServerResult.Outputs.Item("SqlServerPassword").Value;
-                "DatabaseName" = $sqlServerResult.Outputs.Item("DatabaseName").Value;}
+$parameters = @{"SqlServerFQDN" = $sqlServerResult.Outputs.sqlServerFQDN.Value;
+                "SqlServerName" = $sqlServerResult.Outputs.sqlServerName.Value; 
+                "SqlServerAdminLogin" = $sqlServerResult.Outputs.sqlServerAdminLogin.Value;
+                "SqlServerPassword" = $sqlServerResult.Outputs.sqlServerPassword.Value;
+                "DatabaseName" = $sqlServerResult.Outputs.databaseName.Value;}
 
 $parameters | Out-String
-exit
 
 $appServiceResult = New-AzureRmResourceGroupDeployment -ResourceGroupName "perun" -TemplateFile "../templates/appservice.json" -Name "sqlserverdeployment" -TemplateParameterObject $parameters
 $appServiceResult | Out-String
