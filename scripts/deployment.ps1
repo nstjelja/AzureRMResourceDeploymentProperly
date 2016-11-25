@@ -30,8 +30,5 @@ $parameters = @{"SqlServerFQDN" = $sqlServerResult.Outputs.Item("sqlServerFQDN")
                 "SqlServerPassword" = $sqlServerResult.Outputs.Item("SqlServerPassword").Value;
                 "DatabaseName" = $sqlServerResult.Outputs.Item("DatabaseName").Value;}
 
-$parameters | Out-String
-exit
-
-$appServiceResult = New-AzureRmResourceGroupDeployment -ResourceGroupName "perun" -TemplateFile "../templates/appservice.json" -Name "sqlserverdeployment" -TemplateParameterObject $parameters
+$appServiceResult = New-AzureRmResourceGroupDeployment -ResourceGroupName "perun" -TemplateFile "../templates/appservice.json" -Name "webdeployment" -TemplateParameterObject $parameters
 $appServiceResult | Out-String

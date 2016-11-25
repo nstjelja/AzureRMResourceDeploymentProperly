@@ -1,0 +1,23 @@
+{
+          "apiVersion": "2016-03-01",
+          "type": "config",
+          "name": "connectionstrings",
+          "dependsOn": [
+            "[variables('webSiteName')]"
+          ],
+          "properties": {
+            "DefaultConnection": {
+              "value": "[concat('Data Source=tcp:', parameters('SqlServerFQDN'), ',1433;Initial Catalog=', parameters('DatabaseName'),';User Id=', parameters('SqlServerAdminLogin'), '@', parameters('SqlServerFQDN'), ';Password=', parameters('SqlServerPassword'), ';')]",
+              "type": "SQLAzure"
+            }
+
+
+    
+          }
+        }
+
+
+
+         "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName')))]": "empty",
+
+ 
